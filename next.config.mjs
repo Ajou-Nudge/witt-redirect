@@ -4,6 +4,11 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/firm',
+        destination: 'https://wittfirm.framer.website/',
+        permanent: true,
+      },
+      {
         source: '/(.*)',
         destination: 'https://wittcafe.framer.website/',
         permanent: true,
