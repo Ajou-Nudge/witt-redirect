@@ -1,8 +1,13 @@
-import {FramerViewer} from "@/components/FramerViewer";
-import {Metadata} from "next";
+import { FramerViewer } from "@/components/FramerViewer";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-export const generateMetadata = async ({ params }): Promise<Metadata> => {
+interface Params {
+    path: string;
+}
+
+// Use `params` as the argument to get `path` from dynamic route
+export const generateMetadata = async ({ params }: { params: Params }): Promise<Metadata> => {
     let title, description;
     switch (params.path) {
         case "firm":
@@ -15,34 +20,28 @@ export const generateMetadata = async ({ params }): Promise<Metadata> => {
             break;
     }
     return {
-        title: title,
-        description: description,
-    }
-}
+        title: title || "Default Title",
+        description: description || "Default Description",
+    };
+};
 
-const Home = ({ params }) => {
-    if (params.path != "firm") {
+const Home = ({ params }: { params: Params }) => {
+    const { path } = params;
+
+    if (path !== "firm") {
         redirect("/");
     }
 
-    let url;
-    switch (params.path) {
-        case "firm":
-            url = process.env.NEXT_PUBLIC_FIRM_URL;
-            break;
-        default:
-            url = process.env.NEXT_PUBLIC_ROOT_URL;
-            break;
-    }
+    const url = path === "firm" ? process.env.NEXT_PUBLIC_FIRM_URL : process.env.NEXT_PUBLIC_ROOT_URL;
 
     return (
-            <div style={{ height: '100vh', width: '100vw', overflow: 'hidden' }}>
-                {url ? (
-                    <FramerViewer url={url} />
-                ) : (
-                    <p>Loading...</p>
-                )}
-            </div>
+        <div style={{ height: '100vh', width: '100vw', overflow: 'hidden' }}>
+            {url ? (
+                <FramerViewer url={url} />
+            ) : (
+                <p>Loading...</p>
+            )}
+        </div>
     );
 };
 
