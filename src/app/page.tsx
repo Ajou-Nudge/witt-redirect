@@ -1,26 +1,23 @@
-import {FramerViewer} from "@/components/FramerViewer";
+import { FramerViewer } from "@/components/FramerViewer";
+import { redirect } from "next/navigation";
 import {Metadata} from "next";
 
-export const generateMetadata = async (): Promise<Metadata> => {
-    const title = process.env.NEXT_PUBLIC_ROOT_TITLE;
-    const description = process.env.NEXT_PUBLIC_ROOT_DESCRIPTION;
-    return {
-        title: title,
-        description: description,
-    }
-}
+const metadataConfig = JSON.parse(process.env.METADATA_CONFIG || "{}");
 
-const Home = () => {
-    const url = process.env.NEXT_PUBLIC_ROOT_URL;
+const Home = async () => {
+    if (!metadataConfig["cafe"]) {
+        redirect("/");
+    }
+    const url = metadataConfig["cafe"].url;
 
     return (
-            <div style={{ height: '100vh', width: '100vw', overflow: 'hidden' }}>
-                {url ? (
-                    <FramerViewer url={url} />
-                ) : (
-                    <p>Loading...</p>
-                )}
-            </div>
+        <div style={{ height: '100vh', width: '100vw', overflow: 'hidden' }}>
+            {url ? (
+                <FramerViewer url={url} />
+            ) : (
+                <p>Loading...</p>
+            )}
+        </div>
     );
 };
 
