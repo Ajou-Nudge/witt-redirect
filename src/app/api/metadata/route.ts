@@ -25,7 +25,6 @@ export async function GET(req: NextRequest) {
             ogDescription: $('meta[property="og:description"]').attr('content') || null,
             ogImage: $('meta[property="og:image"]').attr('content') || null,
         };
-
         return NextResponse.json(metadata);
     } catch (err: any) {
         return NextResponse.json({ error: `Error fetching metadata: ${err.message}` }, { status: 500 });
