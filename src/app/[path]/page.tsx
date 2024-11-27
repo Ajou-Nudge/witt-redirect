@@ -2,8 +2,12 @@ import { FramerViewer } from "@/components/FramerViewer";
 import { redirect } from "next/navigation";
 import {Metadata} from "next";
 
-export const generateMetadata = async (): Promise<Metadata> => {
-    const url = metadataConfig["cafe"].url;
+interface Params {
+    path: string;
+}
+
+export const generateMetadata = async ({ params }: { params: Params }): Promise<Metadata> => {
+    const url = metadataConfig[params.path].url;
     const encodedUrl = encodeURIComponent(url);
     const response = await fetch(`${process.env.BASE_URL}/api/metadata?url=${encodedUrl}`);
     const metadata = await response.json();
@@ -26,11 +30,12 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 const metadataConfig = JSON.parse(process.env.METADATA_CONFIG || "{}");
 
-const Home = async () => {
-    if (!metadataConfig["cafe"]) {
+const Home = async ({ params }: { params: Params }) => {
+    const { path } = params;
+    if (!metadataConfig[path]) {
         redirect("/");
     }
-    const url = metadataConfig["cafe"].url;
+    const url = metadataConfig[params.path].url;
 
     return (
         <div style={{ height: '100vh', width: '100vw', overflow: 'hidden' }}>
